@@ -1,0 +1,391 @@
+---
+title: "16 Boy names from top 50"
+author: "Dorthe Mohn Christensen & Lucas Toft"
+date: "26-05-2025"
+output: html_document
+---
+
+```{r setup, include=FALSE}
+knitr::opts_chunk$set(echo = TRUE)
+```
+
+## Install packages
+
+```{r install}
+#install.packages("tidyverse", repos = "https://cran.rstudio.com/")
+#install.packages("ggplot2", repos = "https://cran.rstudio.com/")
+```
+
+## Load packages
+```{r}
+library(tidyverse)
+library(ggplot2)
+library(stringr)
+Boynames<-read.csv("data/16_Boynames.csv")
+```
+
+## Including Plots
+Note that the `echo = FALSE` parameter was added to the code chunk to prevent printing of the R code that generated the plot.
+```{r pressure, echo=FALSE}
+
+#rename first column
+colnames(Boynames)[1] <- "Name" #this helps the program reshape the format
+
+#from wide to long format
+long_data_B <- Boynames %>%
+  pivot_longer(
+    cols = -Name,       #all columns except 'Name'
+    names_to = "Year",
+    values_to = "Count",
+    values_drop_na = TRUE
+  )
+
+```
+```{r}
+#making Count numeric instead of character and replacing N/A with 0
+long_data_B %>%
+  mutate(Count=str_replace(Count,"N/A","0"))%>%
+  mutate(Count=as.numeric(Count)) -> long_data_B
+
+```
+
+
+## Making the faceted line plot in colour
+## Multiple graphs 
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]"))%>%
+  mutate(Year = as.numeric(Year)) %>%
+  ggplot( aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 5)) + # optional: fewer ticks
+  geom_line() +
+  facet_wrap(~ Name, scales = "fixed") +
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+   aes(colour = Name)+
+  labs(title = " 16 boy names from top 50 over time", x = "Years (1993-2020)", y = "Count per 1000")
+
+```
+
+##Making the colour plots as individual 
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Sebastian"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Sebastian", x = "Years (1993-2020)", y = "Count per 1000")
+```
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Christian/Kristian"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for Christian/Kristian", x = "Years (1993-2020)", y = "Count per 1000")
+ 
+```
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Storm"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+   scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Storm", x = "Years (1993-2020)", y = "Count per 1000")
+```
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Magnus"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Magnus", x = "Years (1993-2020)", y = "Count per 1000")
+
+```
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Liam"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Liam", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Mohammad / Mohamed"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Mohammad / Mohamed",x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Nohr"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Nohr", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Hugo"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Hugo",x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Elias"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Elias", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Felix"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Felix", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Victor"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Victor", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Malthe"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Malthe", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Noah / Noa"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Noah / Noa",x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Valdemar"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Valdemar", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Frederik"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Frederik", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Silas"))%>%
+  ggplot(aes(x = Year, y = Count, group = Name)) +
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_area(fill = "red", alpha = 0.2, position = "identity") +  # Colored area with some transparency 
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Popularity trend for boy name: Silas", x = "Years (1993-2020)", y = "Count per 1000")
+```
+##Making the colour plots as groups
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Sebastian", "Hugo", "Liam")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name, colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected pop-culture boy names from Top 50", x = "Years (1993-2020)", y = "Count per 1000")
+```
+
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Magnus", "Victor")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name, colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected Generational boy names from Top 50", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Frederik", "Christian/Kristian", "Felix", "Valdemar")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name, colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected royal boy names from Top 50", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Elias", "Noah / Noa")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name,colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected Biblical boy names from Top 50", x = "Years (1993-2020)", y = "Count per 1000")
+```
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Nohr", "Storm")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name, colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected Natural phenomenon boy names from Top 50",x = "Years (1993-2020)", y = "Count per 1000")
+```
+
+```{r}
+long_data_B %>%  
+  mutate(Year = str_remove_all(Year, "[^0-9]")) %>%
+  mutate(Year = as.numeric(Year)) %>%
+  filter(Name %in% c("Silas","Malthe")) %>%
+  ggplot(aes(x = Year, y = Count, group = Name, colour = Name, fill = Name)) +
+  geom_area(alpha = 0.2, position = "identity") +  # Colored area with some transparency
+  scale_x_continuous(breaks = seq(1993, 2020, by = 2)) + # optional: fewer ticks
+  scale_y_continuous(limits = c(0, 45), breaks = seq(0, 45, by = 5)) +  # ensures consistency
+  geom_line(aes(colour = Name)) +  # Include colour mapping within geom_line
+  theme_minimal() +
+  theme(axis.text.x = element_text(angle = 90, vjust = 0.5, hjust = 1)) +
+  labs(title = "Trends in selected boy names from Top 50",x = "Years (1993-2020)", y = "Count per 1000")
+```
+
+ 
